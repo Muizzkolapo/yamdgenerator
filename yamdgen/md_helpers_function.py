@@ -8,10 +8,10 @@ import sys
 from yamdgen.yaml_helpers_function import *
 
 
-def create_md_file(model_name):
+def create_md_file(model_name,path):
     model_name  = model_name.split('.', 1)[0]
-    if check_file_exists(model_name):
-        path = find_file_path(model_name)
+    if check_file_exists(model_name,path):
+        path = find_file_path(model_name,path)
         lines = ['{{% docs {} %}}'.format(model_name),
                 '## Overview', '###### Resources:',
                 '### Unique Key:', '### Partitioned by:',
@@ -25,9 +25,9 @@ def create_md_file(model_name):
                 file.write('\n')
             print("File created: {}.md has been created in {}".format(model_name, path))
 
-def generate_md_for_models(model_names):
+def generate_md_for_models(model_names,path):
     for model_name in model_names:
-        create_md_file(model_name)
+        create_md_file(model_name,path)
 
 
     
