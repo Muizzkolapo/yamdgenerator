@@ -83,13 +83,14 @@ def find_file(model_name,path):
     return None
 
 
-def yamlgen(model_name,path, version=2):
+
+def yamlgen(model_name, path, version=2):
     """
     This function generates a YAML file for the provided model name, and stores it in the specified path.
 
-   :param model_name (str): Name of the model for which YAML file is to be generated.
-   :param path (str): Path where the YAML file will be stored.
-   :param version (int, optional): Version of the YAML file. Default is 2.
+    :param model_name (str): Name of the model for which YAML file is to be generated.
+    :param path (str): Path where the YAML file will be stored.
+    :param version (int, optional): Version of the YAML file. Default is 2.
 
     Returns:
     None: The function only generates the YAML file and stores it in the specified path, no return value.
@@ -104,13 +105,21 @@ def yamlgen(model_name,path, version=2):
         output = output.decode("utf-8")
         ver_details = 'version: {}\n'.format(version)
         mod_details = output.split('version: 2')[1]
-        file_path = '{}/{}.yml'.format(file_path, model_name)
-        with open(file_path, "w") as text_file:
-            text_file.write(ver_details + mod_details)
-        print("{}.yml has been created in {}".format(model_name, file_path))
+        data = yaml.load(mod_details, Loader=yaml.FullLoader)
+        if not data['models'][0]['columns']:
+            print(f"Whoops! {model_name} wasn't created.....try running the model using dbt run and then retry yamlgen \n")
+        else:
+            file_path = '{}/{}.yml'.format(file_path, model_name)
+            with open(file_path, "w") as text_file:
+                text_file.write(ver_details + mod_details)
+            print("{}.yml has been created in {} \n".format(model_name, file_path))
     else:
         print("{} is ephemeral, skipping...".format(model_name))
         pass
+
+
+
+
 
 
 def generate_yaml_for_models(model_names,path, version=2):
